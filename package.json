@@ -9,6 +9,7 @@
     "serve": "serve dist -p 3000",
     "dev": "yarn cli build kaaax0815 && open-cli http://localhost:3000/github/ && yarn serve",
     "build": "yarn cli build kaaax0815",
+	"postbuild": "yarn cli build kaaax0815",
     "deploy": "yarn build && ntl deploy --prod"
   },
   "dependencies": {
