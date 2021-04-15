@@ -2,7 +2,7 @@ name: Trigger Site Deploy
 on:
   schedule:
     - cron:  '0 1 * * *'
-  workflow-dispatch:
+  workflow_dispatch:
 jobs:
   trigger:
     name: Trigger
@@ -11,5 +11,5 @@ jobs:
     - name: Trigger
       uses: netlify/actions/build@master
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.GH_PAT }}
         NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
