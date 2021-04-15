@@ -6,8 +6,6 @@ process.env.OUT_DIR = process.env.OUT_DIR || process.cwd();
 
 const { buildCommand } = require("../build");
 const { updateCommand } = require("../update");
-const { uiCommand } = require("../ui");
-const { runCommand } = require("../run");
 const { version } = require("../package.json");
 
 function collect(val, memo) {
@@ -20,7 +18,7 @@ program
   .description(
     "Build site with your GitHub username. This will be used to customize your site"
   )
-  .option("-t, --theme [theme]", "specify a theme to use", "light")
+  .option("-t, --theme [theme]", "specify a theme to use", "dark")
   .option("-b, --background [background]", "set the background image")
   .option("-f, --fork", "includes forks with repos")
   .option("-s, --sort [sort]", "set default sort for repository", "created")
@@ -35,17 +33,6 @@ program
   .command("update")
   .description("Update user and repository data")
   .action(updateCommand);
-
-program
-  .command("ui")
-  .description("Create and Manage blogs with ease")
-  .action(uiCommand);
-
-program
-  .command("run")
-  .description("Run build files")
-  .option("-p, --port [port]", "provide a port for localhost, default is 3000")
-  .action(runCommand);
 
 program.on("command:*", () => {
   console.log("Unknown Command: " + program.args.join(" "));

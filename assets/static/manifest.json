@@ -1,0 +1,14 @@
+{
+    "name": "Bernd Storath (kaaax0815/kaaaxcreators)",
+    "short_name": "Bernd Storath",
+    "description": "Github Projects - Bernd Storath",
+    "lang": "de",
+    "start_url": "/github/",
+    "display": "standalone",
+    "theme_color": "#181818",
+    "icons": [{
+        "src": "favicon.png",
+        "sizes": "512x512",
+        "type": "image/png"
+    }]
+}

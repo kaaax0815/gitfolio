@@ -18,12 +18,8 @@ const config = path.join(outDir, "config.json");
  * Theme styles are added to the new stylesheet depending on command line
  * arguments.
  */
-async function populateCSS({
-  theme = "light",
-  background = "https://images.unsplash.com/photo-1553748024-d1b27fb3f960?w=1500&q=80"
-} = {}) {
-  /* Get the theme the user requests. Defaults to 'light' */
-  theme = `${theme}.css`;
+async function populateCSS() {
+  theme = `dark.css`;
   let template = path.resolve(assetDir, "index.css");
   let stylesheet = path.join(outDir, "index.css");
 
@@ -38,16 +34,12 @@ async function populateCSS({
   /* Get an array of every available theme */
   let themes = await fs.readdirAsync(path.join(assetDir, "themes"));
 
-  if (!themes.includes(theme)) {
-    console.error('Error: Requested theme not found. Defaulting to "light".');
-    theme = "light";
-  }
   /* Read in the theme stylesheet */
   let themeSource = await fs.readFileSync(path.join(assetDir, "themes", theme));
   themeSource = themeSource.toString("utf-8");
   let themeTemplate = hbs.compile(themeSource);
   let styles = themeTemplate({
-    background: `${background}`
+    background: 'https://images.unsplash.com/photo-1557277770-baf0ca74f908?w=1634'
   });
   /* Add the user-specified styles to the new stylesheet */
   await fs.appendFileAsync(stylesheet, styles);
@@ -66,21 +58,13 @@ async function populateConfig(opts) {
 
 async function buildCommand(username, program) {
   await populateCSS(program);
-  let types;
-  if (!program.include || !program.include.length) {
-    types = ["all"];
-  } else {
-    types = program.include;
-  }
+  let types = ["all"];
   const opts = {
     sort: program.sort,
     order: program.order,
-    includeFork: program.fork ? true : false,
+    includeFork: true,
     types,
-    twitter: program.twitter,
-    linkedin: program.linkedin,
-    medium: program.medium,
-    dribbble: program.dribbble
+    twitter: program.twitter
   };
 
   await populateConfig(opts);

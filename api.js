@@ -14,19 +14,9 @@ async function getRepos(username, opts = {}) {
   let page = 1;
   let repos = [];
 
-  const sort = opts.sort;
-  const order = opts.order || (sort === "full_name" ? "asc" : "desc");
-  const types = opts.types || [];
+  const sort = "pushed"
+  const order = "desc"
   let type = "all";
-
-  if (
-    types.includes("all") ||
-    (types.includes("owner") && types.includes("member"))
-  ) {
-    type = "all";
-  } else if (types.includes("member")) {
-    type = "member";
-  }
 
   do {
     let requestUrl = `https://api.github.com/users/${username}/repos?per_page=100&page=${page++}&type=${type}`;
@@ -37,16 +27,6 @@ async function getRepos(username, opts = {}) {
     tempRepos = JSON.parse(tempRepos.body);
     repos = repos.concat(tempRepos);
   } while (tempRepos.length == 100);
-
-  if (sort == "star") {
-    repos = repos.sort(function(a, b) {
-      if (order == "desc") {
-        return b.stargazers_count - a.stargazers_count;
-      } else {
-        return a.stargazers_count - b.stargazers_count;
-      }
-    });
-  }
 
   return repos;
 }

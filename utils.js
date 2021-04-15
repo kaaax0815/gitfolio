@@ -2,12 +2,11 @@ const path = require("path");
 const bluebird = require("bluebird");
 const fs = bluebird.promisifyAll(require("fs"));
 
-const outDir = path.resolve("./dist/" || process.env.OUT_DIR);
+const outDir = path.resolve("./dist/github/");
+const inDir = path.resolve("./assets/static/");
 const configPath = path.join(outDir, "config.json");
-const blogPath = path.join(outDir, "blog.json");
 
 const defaultConfigPath = path.resolve(`${__dirname}/default/config.json`);
-const defaultBlogPath = path.resolve(`${__dirname}/default/blog.json`);
 
 /**
  * Tries to read file from out dir,
@@ -28,12 +27,16 @@ async function getConfig() {
   return getFileWithDefaults(configPath, defaultConfigPath);
 }
 
-async function getBlog() {
-  return getFileWithDefaults(blogPath, defaultBlogPath);
+async function copyStaticFiles() {
+  fs.readdirSync(inDir).forEach(file => { 
+    fs.copyFile(path.join(inDir, file), path.join(outDir, file), (err) => {
+      if (err) throw err;
+    });
+  }); 
 }
 
 module.exports = {
   outDir,
   getConfig,
-  getBlog
+  copyStaticFiles
 };

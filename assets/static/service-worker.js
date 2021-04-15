@@ -1,19 +1,19 @@
-  importScripts('https://storage.googleapis.com/workbox-cdn/releases/3.6.1/workbox-sw.js');
+  importScripts('https://storage.googleapis.com/workbox-cdn/releases/6.1.5/workbox-sw.js');
 
   if (workbox) {
     workbox.setConfig({
       debug: false
     });
 
-    var defaultStrategy = workbox.strategies.networkFirst({
+    var defaultStrategy = new workbox.strategies.StaleWhileRevalidate({
       cacheName: "fallback",
       plugins: [
-        new workbox.expiration.Plugin({
+        new workbox.expiration.ExpirationPlugin({
           maxEntries: 128,
           maxAgeSeconds: 7 * 24 * 60 * 60, // 1 week
           purgeOnQuotaError: true, // Opt-in to automatic cleanup
         }),
-        new workbox.cacheableResponse.Plugin({
+        new workbox.cacheableResponse.CacheableResponse({
           statuses: [0, 200] // for opague requests
         }),
       ],
@@ -27,15 +27,13 @@
         }
       }
     );
+    workbox.precaching.precacheAndRoute([
+      { url: 'index.html', revision: 'abcd1234' }
+    ]);
 
     workbox.routing.registerRoute(
-      new RegExp(/.*\.(?:js|css)/g),
-      workbox.strategies.networkFirst()
-    );
-
-    workbox.routing.registerRoute(
-      new RegExp(/.*\.(?:png|jpg|jpeg|svg|gif|webp)/g),
-      workbox.strategies.cacheFirst()
+      new RegExp(/.*\.(?:png|jpg|jpeg|svg|gif|webp|js|css|json)/g),
+      new workbox.strategies.StaleWhileRevalidate()
     );
   } else {
     console.log(`No workbox on this browser 😬`);
