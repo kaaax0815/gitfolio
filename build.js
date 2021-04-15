@@ -3,6 +3,7 @@ const path = require("path");
 /* Promise library */
 const bluebird = require("bluebird");
 const hbs = require("handlebars");
+const mkdirp = require('mkdirp')
 /*  Creates promise-returning async functions
     from callback-passed async functions      */
 const fs = bluebird.promisifyAll(require("fs"));
@@ -26,7 +27,7 @@ async function populateCSS() {
   try {
     await fs.accessAsync(outDir, fs.constants.F_OK);
   } catch (err) {
-    await fs.mkdirAsync(outDir);
+    mkdirp(outDir);
   }
   /* Copy over the template CSS stylesheet */
   await fs.copyFileAsync(template, stylesheet);
